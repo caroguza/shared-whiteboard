@@ -1,5 +1,7 @@
 from channels.generic.websocket import WebsocketConsumer
+from board.models import Board
 import json
+
 
 class BoardConsumer(WebsocketConsumer):
     def connect(self):
@@ -10,8 +12,18 @@ class BoardConsumer(WebsocketConsumer):
 
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json['message']
-
+        coordinates = text_data_json['coordinates']
         self.send(text_data=json.dumps({
-            'message': message
+            'message': 'hola'
         }))
+
+        self.save_coordenates(coordinates)
+
+    def save_coordenates(self, coordinates):
+        for coordinate in coordinates:
+            stroke =Board(username='user4', prevx=coordinate['prevX'], prevy=coordinate['prevY'], coordinate_x=coordinate['x'],
+            coordinate_y=coordinate['y'], stroke_identifier=8)
+            stroke.save()
+        
+
+    
