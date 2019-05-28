@@ -8,7 +8,7 @@ class Board(models.Model):
     prevy = models.IntegerField(null=True)
     coordinate_x = models.IntegerField()
     coordinate_y = models.IntegerField()
-    stroke_identifier = models.IntegerField(blank=True)
+    is_point = models.IntegerField(default=0)
 
     def __str__(self):
         return self.username

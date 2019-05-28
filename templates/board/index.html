@@ -93,19 +93,25 @@ function init() {
     //console.log(previous_coordinates)
     
     {% for coordinate in previous_coordinates %}
-        prevX = "{{ coordinate.prevx }}"
-        prevY = "{{ coordinate.prevy }}"
-        currX = "{{ coordinate.coordinate_x }}"
-        currY = "{{ coordinate.coordinate_y }}"
+        prevX = "{{ coordinate.prevx }}";
+        prevY = "{{ coordinate.prevy }}";
+        currX = "{{ coordinate.coordinate_x }}";
+        currY = "{{ coordinate.coordinate_y }}";
+        is_point = "{{ coordinate.is_point }}";
+        if (is_point == 1) {
+            drawPoint();
+        } else {
+            draw() 
+        }
         
-        ctx.beginPath();
+        /* ctx.beginPath();
         ctx.moveTo(prevX, prevY);
         ctx.lineTo(currX, currY);
         ctx.strokeStyle = x;
         ctx.lineWidth = y;
         ctx.strokeStyle = "red";
         ctx.stroke();
-        ctx.closePath();
+        ctx.closePath(); */
     {% endfor %}
     }
 
@@ -146,7 +152,13 @@ function draw() {
     ctx.lineWidth = y;
     ctx.stroke();
     ctx.closePath();
-    
+}
+
+function drawPoint() {
+    ctx.beginPath();
+    ctx.fillStyle = x;
+    ctx.fillRect(currX, currY, 2, 2);
+    ctx.closePath();
 }
 
 function sendCoordinates() {
@@ -184,10 +196,7 @@ function findxy(res, e) {
         flag = true;
         dot_flag = true;
         if (dot_flag) {
-            ctx.beginPath();
-            ctx.fillStyle = x;
-            ctx.fillRect(currX, currY, 2, 2);
-            ctx.closePath();
+            drawPoint();
             dot_flag = false;
         }
     }
@@ -195,7 +204,7 @@ function findxy(res, e) {
         flag = false;
     }
     if (res == 'up') {
-        coordinates = {'prevX': currX, 'prevY': currY, 'x': currX, 'y': currY}
+        coordinates = {'prevX': currX, 'prevY': currY, 'x': currX, 'y': currY, 'is_point': 1}
         stroke_coordinates.push(coordinates)
         sendCoordinates();
     }
@@ -206,7 +215,7 @@ function findxy(res, e) {
             currX = e.clientX - canvas.offsetLeft;
             currY = e.clientY - canvas.offsetTop;
             draw();
-            coordinates = {'prevX': prevX, 'prevY': prevY, 'x': currX, 'y': currY}
+            coordinates = {'prevX': prevX, 'prevY': prevY, 'x': currX, 'y': currY, 'is_point': 0}
             stroke_coordinates.push(coordinates)
         }
     }

@@ -21,8 +21,8 @@ class BoardConsumer(WebsocketConsumer):
 
     def save_coordenates(self, coordinates):
         for coordinate in coordinates:
-            stroke =Board(username='user4', prevx=coordinate['prevX'], prevy=coordinate['prevY'], coordinate_x=coordinate['x'],
-            coordinate_y=coordinate['y'], stroke_identifier=8)
+            stroke =Board(username='user5', prevx=coordinate['prevX'], prevy=coordinate['prevY'], coordinate_x=coordinate['x'],
+            coordinate_y=coordinate['y'], is_point=coordinate['is_point'])
             stroke.save()
         
 
