@@ -12,19 +12,30 @@ class BoardConsumer(WebsocketConsumer):
 
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        coordinates = text_data_json['coordinates']
+        
+        action = text_data_json['action']
         username = text_data_json['username']
         self.send(text_data=json.dumps({
             'message': 'hola'
         }))
 
-        self.save_coordenates(coordinates, username)
+        if action == 'clear':
+            self.clear_board(username)
+        elif action == 'save':
+            self.save_draw(username)
+        else:
+            coordinates = text_data_json['coordinates']
+            self.save_coordenates(username, coordinates)
 
-    def save_coordenates(self, coordinates, username):
+    def save_draw(self, username):
+        user_draw = Board.objects.filter(username=username).values('prevx', 'prevy', 'coordinate_x', 'coordinate_y')
+        print(user_draw)
+
+    def save_coordenates(self, username, coordinates):
         for coordinate in coordinates:
             stroke =Board(username=username, prevx=coordinate['prevX'], prevy=coordinate['prevY'], coordinate_x=coordinate['x'],
             coordinate_y=coordinate['y'], is_point=coordinate['is_point'])
             stroke.save()
-        
 
-    
+    def clear_board(self, username):
+        Board.objects.filter(username=username).delete()
