@@ -31,9 +31,6 @@
 .canvas-column {
     width: 60%;
 }
-.canvas-tools{
-    width: 40%;
-}
 #canvas-board {
     border:15px solid;
     border-image: url('../img/border.png')  30 round !important;
@@ -57,7 +54,7 @@
 
 .canvas-tools .list-group-item:last-child {
     padding-right: 10px;
-  }
+}
 .color {
     top: 10%;
     left: 45%;
@@ -91,6 +88,9 @@
     font-size: 6.5rem;
     padding-top: 5%;
 }
+#main-title {
+    padding-top: 0px !important;
+}
 .canvas-bg .title {
     padding-top: 0;
 }
@@ -99,9 +99,4 @@
     background-color: transparent;
 }
 
-@include media-breakpoint-only(sm) {
-    #canvas-board {
-        background-color: red;
-    } 
-    
- }
+

@@ -1,34 +1,15 @@
+{% extends 'base.html' %}
 {% load staticfiles %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <title>Board</title>
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-    <link href="{% static 'js/bootstrap.min.js' %}">
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <style>
-    @media (max-width: 767.98px) { 
-        .row {
-            display: block !important;
-    }
- }
-</style>
-</head>
-<body onload="init()" class="canvas-body">
-    <div class="container canvas-bg">
-        <div class="row">
-                <div class="col">
-                        <h1 class="title">Monadical's Chalkboard</h1>
-                </div>
-        </div>
+{% block content %}
+<div class="canvas-body">
+    <div class="container ">
+        {{ block.super }}
         <div class="row">
             <div class="canvas-column">
-                <canvas id="canvas-board" class="" width="540" height="510"></canvas>
+                <canvas id="canvas-board" width="540" height="470"></canvas>
             </div>
-            <div class="canvas-tools">
+            <div class="canvas-tools col col-lg-3 col-md-12 col-sm-12">
                 <div class="users">
                     <h4><span class="badge badge-secondary">Current Users</span></h4>
                     <ul class="list-group list-group-horizontal">
@@ -72,197 +53,46 @@
                     </span>                
                 </div>
                 <div>
-                    <button class="btn btn-success" onclick="saveDraw()" style="top:55%;left:10%;">Export Drawing</button>
+                    <button class="btn btn-success" onclick="exportDraw()" style="top:55%;left:10%;">Export Drawing</button>
                     <button class="btn btn-danger" onclick="clearBoard()" style="top:55%;left:15%;">Clear Board</button>
                 </div>                
             </div>
         </div>
     </div>
-</body>
+</div>
+</div>
+</div>
+{% endblock content %}
+{% block js %}
 <script>
-    
-    var boardSocket = new WebSocket('ws://' + window.location.host + '/')
-
-    boardSocket.onclose = e => {
-        console.error('Chat socket closed unexpectedly')
-    };
-
-    /*Board*/
-    let canvas = false
-    let ctx = false
-    let flag = false
-    let prevX = 0
-    let currX = 0
-    let prevY = 0
-    let currY = 0
-    let dot_flag = false
-    let stroke_coordinates = []
-    let erase_coordinates = []
-    let username = "{{username}}"
-    let currentColor
-    let x = "black"
-    let y = 2
-
-    document.getElementById('user').innerHTML = username
+    let username = "{{username}}";
+</script>
+    <script src="{% static 'js/board.js' %}"></script> 
+    <script>
     
 
-init = () => {
-    canvas = document.getElementById('canvas-board')
-    ctx = canvas.getContext("2d")
-    w = canvas.width
-    h = canvas.height
-
-    canvas.addEventListener("mousemove", function (e) {
-        findxy('move', e)
-    }, false);
-    canvas.addEventListener("mousedown", function (e) {
-        findxy('down', e)
-    }, false);
-    canvas.addEventListener("mouseup", function (e) {
-        findxy('up', e)
-    }, false);
-    canvas.addEventListener("mouseout", function (e) {
-        findxy('out', e)
-    }, false);
-
-    {% for coordinate in previous_coordinates %}
-        prevX = "{{ coordinate.prevx }}";
-        prevY = "{{ coordinate.prevy }}";
-        currX = "{{ coordinate.coordinate_x }}";
-        currY = "{{ coordinate.coordinate_y }}";
+    {% for coordinate in previous_strokes %}
+        prevX = "{{ coordinate.prev_x }}";
+        prevY = "{{ coordinate.prev_y }}";
+        currX = "{{ coordinate.coordenate_x }}";
+        currY = "{{ coordinate.coordenate_y }}";
         is_point = "{{ coordinate.is_point }}";
-        x = "{{ coordinate.color }}";
+        inkColor = "{{ coordinate.color }}";
+
         if (is_point == 1) {
             drawPoint()
         } else {
-            if (x == "white") y = 14
+            if (inkColor == "white") {
+                strokeWidth = 14
+                
+            }
             draw() 
-            y = 2
+            strokeWidth = 2
         }
     {% endfor %}
-}
-
-erase = obj => {
-    $('#canvas-board').addClass('erase')
-    
-    currentColor = x
-    x = "white"
-    y = 14
-    
-}
-
-setColor = obj => {
-    switch (obj.id) {
-        case "green":
-            x = "green"
-            break;
-        case "blue":
-            x = "blue"
-            break;
-        case "red":
-            x = "red"
-            break;
-        case "yellow":
-            x = "yellow"
-            break;
-        case "orange":
-            x = "orange"
-            break;
-        case "black":
-            x = "black"
-            break;
-        case "white":
-            x = "white"
-            break;
-    }
-    if (x == "white") y = 14;
-    else y = 2;
-}
-
-usePencil = () => {
-    $('#canvas-board').removeClass('erase')
-    x = currentColor
-    y = 2
-}
-
-draw = () => {
-    ctx.beginPath()
-    ctx.moveTo(prevX, prevY)
-    ctx.lineTo(currX, currY)
-    ctx.strokeStyle = x
-    ctx.lineWidth = y
-    ctx.stroke()
-    ctx.closePath()
-}
-
-drawPoint = () => {
-    ctx.beginPath()
-    ctx.fillStyle = x
-    ctx.fillRect(currX, currY, 2, 2)
-    ctx.closePath()
-}
-
-sendCoordinates = () => {
-    if (stroke_coordinates != '') {
-        boardSocket.send(JSON.stringify({
-            'action': 'draw',
-            'coordinates': stroke_coordinates,
-            'username': username,
-            'color': x
-        }))
-    }
-    stroke_coordinates = []
-}
-
-clearBoard = () => {
-    ctx.clearRect(0, 0, w, h)
-    boardSocket.send(JSON.stringify({
-        'action': 'clear',
-        'username': username
-    }))
-
-}
-
-saveDraw = () => {
-    boardSocket.send(JSON.stringify({
-        'action': 'save',
-        'username': username
-    }))
-}
-
-findxy = (res, e) => {
-    if (res == 'down') {
-        prevX = currX
-        prevY = currY
-        currX = e.clientX - canvas.offsetLeft
-        currY = e.clientY - canvas.offsetTop
-
-        flag = true
-        dot_flag = true
-        if (dot_flag) {
-            drawPoint()
-            dot_flag = false
-        }
-    }
-    if (res == 'up' || res == "out") {
-        flag = false
-    }
-    if (res == 'up') {
-        coordinates = {'prevX': currX, 'prevY': currY, 'x': currX, 'y': currY, 'is_point': 1}
-        stroke_coordinates.push(coordinates)
-        sendCoordinates()
-    }
-    if (res == 'move') {
-        if (flag) {
-            prevX = currX
-            prevY = currY
-            currX = e.clientX - canvas.offsetLeft
-            currY = e.clientY - canvas.offsetTop
-            draw()
-            coordinates = {'prevX': prevX, 'prevY': prevY, 'x': currX, 'y': currY, 'is_point': 0}
-            stroke_coordinates.push(coordinates)
-        }
-    }
-}
 </script>
+ 
+
+    
+{% endblock js %}
 </html>
