@@ -60,16 +60,21 @@
                         </li>
                     </ul>
                 </div>
+                <div class="drawing-tools">
+                    <span>
+                        <h4><span class="badge badge-secondary">Pencil</span></h4>
+                        <div class="pencil" onclick="usePencil()"></div>
+                    </span>
+                    
+                    <span>
+                        <h4><span class="badge badge-secondary">Eraser</span></h4>
+                        <div class="eraser" id="white" onclick="erase(this)"></div>
+                    </span>                
+                </div>
                 <div>
-                    <h4><span class="badge badge-secondary">Eraser</span></h4>
-                    <div class="eraser" id="white" onclick="erase(this)">
-                </div>
-                </div>
-                <div>
-                    <button class="btn btn-success" size="30" onclick="saveDraw()" style="top:55%;left:10%;">Export Drawing</button>
-                    <button class="btn btn-danger" size="23" onclick="clearBoard()" style="top:55%;left:15%;">Clear Board</button>
-                </div>
-                
+                    <button class="btn btn-success" onclick="saveDraw()" style="top:55%;left:10%;">Export Drawing</button>
+                    <button class="btn btn-danger" onclick="clearBoard()" style="top:55%;left:15%;">Clear Board</button>
+                </div>                
             </div>
         </div>
     </div>
@@ -138,15 +143,12 @@ init = () => {
 }
 
 erase = obj => {
-    $('#canvas-board').toggleClass('erase')
-    if (!$('#canvas-board').hasClass('erase')) {
-        x = currentColor
-        y = 2
-    } else {
-        currentColor = x
-        x = "white"
-        y = 14
-    }
+    $('#canvas-board').addClass('erase')
+    
+    currentColor = x
+    x = "white"
+    y = 14
+    
 }
 
 setColor = obj => {
@@ -175,6 +177,12 @@ setColor = obj => {
     }
     if (x == "white") y = 14;
     else y = 2;
+}
+
+usePencil = () => {
+    $('#canvas-board').removeClass('erase')
+    x = currentColor
+    y = 2
 }
 
 draw = () => {
@@ -207,14 +215,12 @@ sendCoordinates = () => {
 }
 
 clearBoard = () => {
-    let m = confirm("Want to clear");
-    if (m) {
-        ctx.clearRect(0, 0, w, h)
-        boardSocket.send(JSON.stringify({
-            'action': 'clear',
-            'username': username
-        }))
-    }
+    ctx.clearRect(0, 0, w, h)
+    boardSocket.send(JSON.stringify({
+        'action': 'clear',
+        'username': username
+    }))
+
 }
 
 saveDraw = () => {

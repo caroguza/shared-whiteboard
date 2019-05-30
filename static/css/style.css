@@ -52,6 +52,7 @@
     padding-left: 10px;
     padding-right: 0;
     border: none;
+    background-color: transparent;
 }
 
 .canvas-tools .list-group-item:last-child {
@@ -62,12 +63,26 @@
     left: 45%;
     width: 20px;
     height: 20px;
+    border: 2px white solid;
+    border-radius: 5px;
+}
+.pencil {
+    background-image: url('../img/pencil.png') !important;
+    background-repeat: no-repeat;
+    height: 100px;
+    margin-left: 10px;
 }
 .eraser {
     background-image: url('../img/eraser2.png') !important;
     background-repeat: no-repeat;
     height: 100px;
     margin-left: 10px;
+}
+.drawing-tools {
+    display: flex;
+}
+.drawing-tools span {
+    margin-right: 10px;
 }
 .title {
     font-family: 'DK Crayon Crumble';
