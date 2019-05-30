@@ -9,6 +9,7 @@ class Board(models.Model):
     coordinate_x = models.IntegerField()
     coordinate_y = models.IntegerField()
     is_point = models.IntegerField(default=0)
+    color = models.CharField(max_length=225, default='black')
 
     def __str__(self):
         return self.username

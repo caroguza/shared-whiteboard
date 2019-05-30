@@ -1,4 +1,5 @@
 {% load staticfiles %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,47 +9,64 @@
     <link href="{% static 'js/bootstrap.min.js' %}">
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <style>
+    @media (max-width: 767.98px) { 
+        .row {
+            display: block !important;
+    }
+ }
+</style>
 </head>
-<!-- <body>
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br/>
-    <input id="chat-message-input" type="text" size="100"/><br/>
-    <input id="chat-message-submit" type="button" value="Send"/>
-</body> -->
 <body onload="init()" class="canvas-body">
     <div class="container canvas-bg">
+        <div class="row">
+                <div class="col">
+                        <h1 class="title">Monadical's Chalkboard</h1>
+                </div>
+        </div>
         <div class="row">
             <div class="canvas-column">
                 <canvas id="canvas-board" class="" width="540" height="510"></canvas>
             </div>
             <div class="canvas-tools">
-                <h3 class="badge badge-secondary">Current Users</h3>
-                <h3 class="badge badge-secondary">Choose Color</h3>
-                <ul class="list-group list-group-horizontal">
-                    <li class="list-group-item">
-                        <div class="color" style="background:green;" id="green" onclick="color(this)"></div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="color" style="background:blue;" id="blue" onclick="color(this)"></div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="color" style="background:red;" id="red" onclick="color(this)"></div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="color" style="background:yellow;" id="yellow" onclick="color(this)"></div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="color" style="background:orange;" id="orange" onclick="color(this)"></div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="color" style="background:black;" id="black" onclick="color(this)"></div>
-                    </li>
-                </ul>
-                
-
-                <h3 class="badge badge-secondary">Eraser</h3>
-                <div class="eraser" id="white" onclick="erase(this)"></div>
+                <div class="users">
+                    <h4><span class="badge badge-secondary">Current Users</span></h4>
+                    <ul class="list-group list-group-horizontal">
+                        <li class="list-group-item">
+                            <span id="user" class="badge badge-info"></span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="choose-color">
+                    <h4><span class="badge badge-secondary">Choose Color</span></h4>
+                    <ul class="list-group list-group-horizontal">
+                        <li class="list-group-item">
+                            <div class="color" style="background:green;" id="green" onclick="setColor(this)"></div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="color" style="background:blue;" id="blue" onclick="setColor(this)"></div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="color" style="background:red;" id="red" onclick="setColor(this)"></div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="color" style="background:yellow;" id="yellow" onclick="SetColor(this)"></div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="color" style="background:orange;" id="orange" onclick="setColor(this)"></div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="color" style="background:black;" id="black" onclick="setColor(this)"></div>
+                        </li>
+                    </ul>
+                </div>
                 <div>
-                    <button class="btn btn-success" size="30" onclick="saveDraw()" style="top:55%;left:10%;">Save Draw</button>
+                    <h4><span class="badge badge-secondary">Eraser</span></h4>
+                    <div class="eraser" id="white" onclick="erase(this)">
+                </div>
+                </div>
+                <div>
+                    <button class="btn btn-success" size="30" onclick="saveDraw()" style="top:55%;left:10%;">Export Drawing</button>
                     <button class="btn btn-danger" size="23" onclick="clearBoard()" style="top:55%;left:15%;">Clear Board</button>
                 </div>
                 
@@ -58,36 +76,11 @@
 </body>
 <script>
     
-    var boardSocket = new WebSocket('ws://' + window.location.host + '/');
-    
-    boardSocket.onmessage = e => {
-        var data = JSON.parse(e.data)
-        var message = data['message']
-        /*This is the value that is send back to the server*/
-        /*document.querySelector('#chat-log').value += (message + '\n');*/
-    };
+    var boardSocket = new WebSocket('ws://' + window.location.host + '/')
 
     boardSocket.onclose = e => {
         console.error('Chat socket closed unexpectedly')
     };
-
-    /*document.querySelector('#chat-message-input').focus();
-    document.querySelector('#chat-message-input').onkeyup = function(e) {
-        if (e.keyCode === 13) {  // enter, return
-            document.querySelector('#chat-message-submit').click();
-        }
-    };*/
-
-/*     document.querySelector('#chat-message-submit').onclick = function(e) {
-        var messageInputDom = document.querySelector('#chat-message-input');
-        var message = messageInputDom.value;
-        console.log(message);
-        boardSocket.send(JSON.stringify({
-            'message': message
-        }));
-
-        messageInputDom.value = '';
-    }; */
 
     /*Board*/
     let canvas = false
@@ -101,14 +94,15 @@
     let stroke_coordinates = []
     let erase_coordinates = []
     let username = "{{username}}"
-   
     let currentColor
     let x = "black"
     let y = 2
 
+    document.getElementById('user').innerHTML = username
+    
+
 init = () => {
     canvas = document.getElementById('canvas-board')
-    console.log(canvas.getBoundingClientRect())
     ctx = canvas.getContext("2d")
     w = canvas.width
     h = canvas.height
@@ -126,19 +120,19 @@ init = () => {
         findxy('out', e)
     }, false);
 
-    var previous_coordinates = "{{ previous_coordinates }}";
-    //console.log(previous_coordinates)
-    
     {% for coordinate in previous_coordinates %}
         prevX = "{{ coordinate.prevx }}";
         prevY = "{{ coordinate.prevy }}";
         currX = "{{ coordinate.coordinate_x }}";
         currY = "{{ coordinate.coordinate_y }}";
         is_point = "{{ coordinate.is_point }}";
+        x = "{{ coordinate.color }}";
         if (is_point == 1) {
             drawPoint()
         } else {
+            if (x == "white") y = 14
             draw() 
+            y = 2
         }
     {% endfor %}
 }
@@ -151,37 +145,36 @@ erase = obj => {
     } else {
         currentColor = x
         x = "white"
-        y = 10
+        y = 14
     }
 }
 
-color = obj => {
+setColor = obj => {
     switch (obj.id) {
         case "green":
-            x = "green";
+            x = "green"
             break;
         case "blue":
-            x = "blue";
+            x = "blue"
             break;
         case "red":
-            x = "red";
+            x = "red"
             break;
         case "yellow":
-            x = "yellow";
+            x = "yellow"
             break;
         case "orange":
-            x = "orange";
+            x = "orange"
             break;
         case "black":
-            x = "black";
+            x = "black"
             break;
         case "white":
-            x = "white";
+            x = "white"
             break;
     }
     if (x == "white") y = 14;
     else y = 2;
-
 }
 
 draw = () => {
@@ -206,7 +199,8 @@ sendCoordinates = () => {
         boardSocket.send(JSON.stringify({
             'action': 'draw',
             'coordinates': stroke_coordinates,
-            'username': username
+            'username': username,
+            'color': x
         }))
     }
     stroke_coordinates = []

@@ -10,7 +10,9 @@ class IndexView(View):
 class BoardView(View):
     def post(self, request):
         username = request.POST['username']
-        previous_coordinates = Board.objects.values('coordinate_x', 'coordinate_y', 'prevx', 'prevy', 'is_point').filter(username=username)
+        previous_coordinates = Board.objects.values('coordinate_x', 'coordinate_y', 'prevx', 'prevy', 'is_point', 'color')\
+                                            .filter(username=username)
+    
         context = {
             'username': username,
             'previous_coordinates': previous_coordinates

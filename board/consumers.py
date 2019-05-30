@@ -25,16 +25,24 @@ class BoardConsumer(WebsocketConsumer):
             self.save_draw(username)
         else:
             coordinates = text_data_json['coordinates']
-            self.save_coordenates(username, coordinates)
+            color = text_data_json['color']
+            self.save_coordenates(username, coordinates, color)
 
     def save_draw(self, username):
-        user_draw = Board.objects.filter(username=username).values('prevx', 'prevy', 'coordinate_x', 'coordinate_y')
-        print(user_draw)
+        user_draw = Board.objects.filter(username=username)\
+                                 .values('prevx', 'prevy', 'coordinate_x', 'coordinate_y', 'color')
 
-    def save_coordenates(self, username, coordinates):
+    def save_coordenates(self, username, coordinates, color):
         for coordinate in coordinates:
-            stroke =Board(username=username, prevx=coordinate['prevX'], prevy=coordinate['prevY'], coordinate_x=coordinate['x'],
-            coordinate_y=coordinate['y'], is_point=coordinate['is_point'])
+            stroke = Board(
+                username=username, 
+                prevx=coordinate['prevX'], 
+                prevy=coordinate['prevY'], 
+                coordinate_x=coordinate['x'],
+                coordinate_y=coordinate['y'], 
+                is_point=coordinate['is_point'], 
+                color=color
+            )
             stroke.save()
 
     def clear_board(self, username):

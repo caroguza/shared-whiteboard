@@ -9,19 +9,25 @@
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
 <body>
-    <div class="container-fluid board">
-        <div class="row">
-            <div class="col justify-content-center username-form">
-                <form class="form-inline" method="POST" action="/board/" 
-                    onsubmit="window.location.href = '/'; return true;">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Username" name="username">
-                    </div>    
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </form>
+    <div class="container-fluid">
+        <div class="board">
+            <div class="row align-items-start">
+                <div class="col">
+                        <h1 class="title">Monadical's Chalkboard</h1>
+                </div>
             </div>
-        </div>  
+            <div class="row justify-content-lg-center">
+                <div class="col-lg-auto username-form">
+                    <form class="form-inline" method="POST" action="/board/" onsubmit="window.location.href = '/'; return true;">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Username" name="username">
+                        </div>    
+                        <button type="submit" class="btn btn-success">Join!</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
