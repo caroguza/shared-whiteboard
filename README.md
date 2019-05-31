@@ -16,8 +16,8 @@ virtualenv -p `which python3.6` venv
 ```
 
 * Install requirements:
-
-`pip install -r requirements.txt`
+ `pip install -r requirements.txt`
+ 
 * Create a PostgreSQL user and DB and update the settings.py file with your credentials.
 * run python manage.py makemigrations
 * run python manage.py migrate
