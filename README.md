@@ -1,7 +1,7 @@
-# Shared-Whiteboard
+# Shared-Chalkboard
+![Screenshot](screenshot.png)
 
-
-A canvas that two peoplecan draw on, each person’s strokes are visible in a color specific to that person. The drawing is saved continously to the server, as an append-only log of strokes, if the user refreshes it is displayed without any data loss.
+A canvas that people can draw on, each person’s strokes are visible in a color specific to that person. The drawing is saved continously to the server, as an append-only log of strokes, if the user refreshes it is displayed without any data loss.
 
 
 
