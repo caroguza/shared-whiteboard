@@ -18,8 +18,7 @@ let currentColor
 let inkColor = "black"
 let strokeWidth = 2
 
-document.getElementById('user').innerHTML = username
-
+document.getElementsByClassName('user')[0].innerText = username
 
 init = () => {
     canvas = document.getElementById('canvas-board')
@@ -51,6 +50,9 @@ erase = obj => {
 }
 
 setColor = obj => {
+    $('.color').removeClass('selected-color')
+    $(obj).addClass('selected-color')
+    
     switch (obj.id) {
         case "green":
             inkColor = "green"
@@ -120,13 +122,6 @@ clearBoard = () => {
         'username': username
     }))
 
-}
-
-exportDraw = () => {
-    boardSocket.send(JSON.stringify({
-        'action': 'save',
-        'username': username
-    }))
 }
 
 setCoordenates = (res, e) => {

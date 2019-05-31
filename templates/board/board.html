@@ -14,7 +14,7 @@
                     <h4><span class="badge badge-secondary">Current Users</span></h4>
                     <ul class="list-group list-group-horizontal">
                         <li class="list-group-item">
-                            <span id="user" class="badge badge-info"></span>
+                            <span class="user badge badge-info"></span>
                         </li>
                     </ul>
                 </div>
@@ -53,8 +53,8 @@
                     </span>                
                 </div>
                 <div>
-                    <button class="btn btn-success" onclick="exportDraw()" style="top:55%;left:10%;">Export Drawing</button>
-                    <button class="btn btn-danger" onclick="clearBoard()" style="top:55%;left:15%;">Clear Board</button>
+                    <a id="export-draw" class="btn btn-success" href="{% url 'export' username  %}">Export Drawing</a>
+                    <button class="btn btn-danger" onclick="clearBoard()">Clear Board</button>
                 </div>                
             </div>
         </div>

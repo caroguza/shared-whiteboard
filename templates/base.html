@@ -9,24 +9,17 @@
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
-<body>
-  
-        
-        {% block content %}
+<body>      
+    {% block content %}
         {% block title%}
         <div class="row">
-                <div class="col">
-                    <h1 id="main-title" class="title">Monadical's Chalkboard</h1>
-                </div>
+            <div class="col">
+                <h1 id="main-title" class="title">Monadical's Chalkboard</h1>
             </div>
-        {% endblock title%}
-                
-           
-        {% endblock content %}
         </div>
-    </div>
+        {% endblock title%}
+    {% endblock content %}
 </body>
-
 {% block js %}
 {% endblock js %}
 </html>

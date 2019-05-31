@@ -20,16 +20,11 @@ class BoardConsumer(WebsocketConsumer):
         
         if action == 'clear':
             self.clear_board(username)
-        elif action == 'export':
-            self.export_draw(username)
         elif action == 'draw':
             coordenates = text_data_json['coordenates']
             color = text_data_json['color']
             self.save_coordenates(username, coordenates, color)
 
-    def export_draw(self, username):
-        user_draw = Board.objects.filter(username=username)\
-                                 .values('prevx', 'prevy', 'coordinate_x', 'coordinate_y', 'color')
 
     def save_coordenates(self, username, coordenates, color):
         for coordenate in coordenates:

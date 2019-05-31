@@ -8,7 +8,7 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    min-height: 100vh; /* These two lines are counted as one :-)       */
+    min-height: 100vh;
 }
 #canvas-board {
     background-color: white;
@@ -22,9 +22,6 @@
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }
-/* .canvas-bg .row {
-    margin-top: 10vh;
-} */
 .username-form {
     padding-top: 10%;
 }
@@ -33,14 +30,13 @@
 }
 #canvas-board {
     border:15px solid;
-    border-image: url('../img/border.png')  30 round !important;
-    cursor: auto;
+    border-image: url('../img/border.png')  30 round;
     cursor: url('../img/marker.png'), auto;
     
 }
 #canvas-board.erase {
     cursor: auto;
-    cursor: url('../img/eraser2.png'), auto !important;
+    cursor: url('../img/eraser2.png'), auto;
 }
 .canvas-tools .list-group {
     margin: 10px;
@@ -62,18 +58,21 @@
     height: 20px;
     border: 2px white solid;
     border-radius: 5px;
+    cursor:pointer;
 }
 .pencil {
-    background-image: url('../img/pencil.png') !important;
+    background-image: url('../img/pencil.png');
     background-repeat: no-repeat;
-    height: 100px;
+    height: 80px;
     margin-left: 10px;
+    cursor:pointer;
 }
 .eraser {
-    background-image: url('../img/eraser2.png') !important;
+    background-image: url('../img/eraser2.png');
     background-repeat: no-repeat;
-    height: 100px;
+    height: 80px;
     margin-left: 10px;
+    cursor:pointer;
 }
 .drawing-tools {
     display: flex;
@@ -88,15 +87,23 @@
     font-size: 6.5rem;
     padding-top: 5%;
 }
-#main-title {
-    padding-top: 0px !important;
+.canvas-body #main-title {
+    padding-top: 0px;
 }
 .canvas-bg .title {
     padding-top: 0;
 }
 .users .list-group  .list-group-item {
-    padding-left: 0 !important;
+    padding-left: 0;
+    border: none;
     background-color: transparent;
 }
-
-
+.users .list-group-horizontal {
+    margin-top: -10px;
+}
+#export-draw {
+    color: white;
+}
+.selected-color {
+    border: 2px solid darkgray;
+}
