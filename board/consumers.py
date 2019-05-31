@@ -2,7 +2,7 @@ import json
 
 from channels.generic.websocket import WebsocketConsumer
 
-from board.models import Board
+from board.models import Stroke
 
 
 class BoardConsumer(WebsocketConsumer):
@@ -28,7 +28,7 @@ class BoardConsumer(WebsocketConsumer):
 
     def save_coordenates(self, username, coordenates, color):
         for coordenate in coordenates:
-            board = Board.objects.create(
+            Stroke.objects.create(
                 username=username, 
                 prev_x=coordenate['prevX'], 
                 prev_y=coordenate['prevY'], 
@@ -39,4 +39,4 @@ class BoardConsumer(WebsocketConsumer):
             )
                 
     def clear_board(self, username):
-        Board.objects.filter(username=username).delete()
+        Stroke.objects.filter(username=username).delete()

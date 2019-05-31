@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
 
-from board.models import Board
+from board.models import Stroke
 
 
 class IndexView(View):
@@ -14,7 +14,7 @@ class IndexView(View):
 class BoardView(View):
     def post(self, request):
         username = request.POST['username']
-        previous_strokes = Board.get_user_strokes(username)
+        previous_strokes = Stroke.get_user_strokes(username)
         context = {
             'username': username,
             'previous_strokes': previous_strokes
@@ -25,7 +25,7 @@ class BoardView(View):
 
 class ExportDraw(View):
     def get(self, request, username):
-        user_strokes = Board.get_user_strokes(username=username)
+        user_strokes = Stroke.get_user_strokes(username=username)
         file_name = f'{username}_strokes.json'
         json_file = JsonResponse({username: list(user_strokes)})
         response = HttpResponse(json_file)

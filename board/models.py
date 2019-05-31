@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Board(models.Model):
+class Stroke(models.Model):
     username = models.CharField(max_length=225)
     timestamp = models.DateTimeField(auto_now_add=True)
     prev_x = models.IntegerField(null=True)
