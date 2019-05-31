@@ -2,97 +2,90 @@
 {% load staticfiles %}
 
 {% block content %}
-<div class="canvas-body">
-    <div class="container ">
-        {{ block.super }}
-        <div class="row">
-            <div class="canvas-column">
-                <canvas id="canvas-board" width="540" height="470"></canvas>
-            </div>
-            <div class="canvas-tools col col-lg-3 col-md-12 col-sm-12">
-                <div class="users">
-                    <h4><span class="badge badge-secondary">Current Users</span></h4>
-                    <ul class="list-group list-group-horizontal">
-                        <li class="list-group-item">
-                            <span class="user badge badge-info"></span>
-                        </li>
-                    </ul>
+    <div class="canvas-body">
+        <div class="container ">
+            {{ block.super }}
+            <div class="row">
+                <div class="canvas-column">
+                    <canvas id="canvas-board" width="540" height="470"></canvas>
                 </div>
-                <div class="choose-color">
-                    <h4><span class="badge badge-secondary">Choose Color</span></h4>
-                    <ul class="list-group list-group-horizontal">
-                        <li class="list-group-item">
-                            <div class="color" style="background:green;" id="green" onclick="setColor(this)"></div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="color" style="background:blue;" id="blue" onclick="setColor(this)"></div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="color" style="background:red;" id="red" onclick="setColor(this)"></div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="color" style="background:yellow;" id="yellow" onclick="SetColor(this)"></div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="color" style="background:orange;" id="orange" onclick="setColor(this)"></div>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="color" style="background:black;" id="black" onclick="setColor(this)"></div>
-                        </li>
-                    </ul>
+                <div class="canvas-tools col col-lg-3 col-md-12 col-sm-12">
+                    <div class="users">
+                        <h4><span class="badge badge-secondary">Current Users</span></h4>
+                        <ul class="list-group list-group-horizontal">
+                            <li class="list-group-item">
+                                <span class="user badge badge-info"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="choose-color">
+                        <h4><span class="badge badge-secondary">Choose Color</span></h4>
+                        <ul class="list-group list-group-horizontal">
+                            <li class="list-group-item">
+                                <div class="color" style="background:green;" id="green" onclick="setColor(this)"></div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="color" style="background:blue;" id="blue" onclick="setColor(this)"></div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="color" style="background:red;" id="red" onclick="setColor(this)"></div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="color" style="background:yellow;" id="yellow" onclick="SetColor(this)"></div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="color" style="background:orange;" id="orange" onclick="setColor(this)"></div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="color" style="background:black;" id="black" onclick="setColor(this)"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="drawing-tools">
+                        <span>
+                            <h4><span class="badge badge-secondary">Pencil</span></h4>
+                            <div class="pencil" onclick="usePencil()"></div>
+                        </span>
+                        
+                        <span>
+                            <h4><span class="badge badge-secondary">Eraser</span></h4>
+                            <div class="eraser" id="white" onclick="erase(this)"></div>
+                        </span>                
+                    </div>
+                    <div>
+                        <a id="export-draw" class="btn btn-success" href="{% url 'export' username  %}">Export Drawing</a>
+                        <button class="btn btn-danger" onclick="clearBoard()">Clear Board</button>
+                    </div>                
                 </div>
-                <div class="drawing-tools">
-                    <span>
-                        <h4><span class="badge badge-secondary">Pencil</span></h4>
-                        <div class="pencil" onclick="usePencil()"></div>
-                    </span>
-                    
-                    <span>
-                        <h4><span class="badge badge-secondary">Eraser</span></h4>
-                        <div class="eraser" id="white" onclick="erase(this)"></div>
-                    </span>                
-                </div>
-                <div>
-                    <a id="export-draw" class="btn btn-success" href="{% url 'export' username  %}">Export Drawing</a>
-                    <button class="btn btn-danger" onclick="clearBoard()">Clear Board</button>
-                </div>                
             </div>
         </div>
     </div>
-</div>
-</div>
-</div>
 {% endblock content %}
 {% block js %}
-<script>
-    let username = "{{username}}";
-</script>
+    <script>
+        let username = "{{username}}";
+    </script>
     <script src="{% static 'js/board.js' %}"></script> 
     <script>
-    
+        {% for coordinate in previous_strokes %}
+            prevX = "{{ coordinate.prev_x }}";
+            prevY = "{{ coordinate.prev_y }}";
+            currX = "{{ coordinate.coordenate_x }}";
+            currY = "{{ coordinate.coordenate_y }}";
+            is_point = "{{ coordinate.is_point }}";
+            inkColor = "{{ coordinate.color }}";
 
-    {% for coordinate in previous_strokes %}
-        prevX = "{{ coordinate.prev_x }}";
-        prevY = "{{ coordinate.prev_y }}";
-        currX = "{{ coordinate.coordenate_x }}";
-        currY = "{{ coordinate.coordenate_y }}";
-        is_point = "{{ coordinate.is_point }}";
-        inkColor = "{{ coordinate.color }}";
-
-        if (is_point == 1) {
-            drawPoint()
-        } else {
-            if (inkColor == "white") {
-                strokeWidth = 14
-                
+            if (is_point == 1) {
+                drawPoint()
+            } else {
+                if (inkColor == "white") {
+                    strokeWidth = 14
+                    
+                }
+                draw() 
+                strokeWidth = 2
             }
-            draw() 
-            strokeWidth = 2
-        }
-    {% endfor %}
-</script>
- 
-
-    
+        {% endfor %}
+    </script>
 {% endblock js %}
 </html>

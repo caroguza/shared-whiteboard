@@ -12,8 +12,8 @@ class IndexView(View):
 
 
 class BoardView(View):
-    def post(self, request):
-        username = request.POST['username']
+    def get(self, request):
+        username = request.GET['username']
         previous_strokes = Stroke.get_user_strokes(username)
         context = {
             'username': username,
