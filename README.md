@@ -18,12 +18,9 @@ virtualenv -p `which python3.6` venv
 * Install requirements:
 
 `pip install -r requirements.txt`
-
-`Create a PostgreSQL user and DB and update the settings.py file with your credentials.`
-
-`run python manage.py makemigrations`
-
-`run python manage.py migrate`
+* Create a PostgreSQL user and DB and update the settings.py file with your credentials.
+* run python manage.py makemigrations
+* run python manage.py migrate
 
 
 ## Execution:  
@@ -31,3 +28,4 @@ virtualenv -p `which python3.6` venv
 * In the active Virtualenv and the project directory run 
 ```
 python manage.py runserver
+```
