@@ -10,7 +10,6 @@
             <div class="row justify-content-lg-center justify-content-md-center">
                 <div class="col-lg-auto col-md-auto username-form">
                     <form class="form-inline" method="GET" action="/board/" onsubmit="window.location.href = '/'; return true;">
-                        {% csrf_token %}
                         <div class="form-group">
                             <input type="text" class="form-control" placeholder="Username" name="username">
                         </div>    
