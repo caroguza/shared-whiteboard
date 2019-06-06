@@ -1,6 +1,6 @@
 var boardSocket = new WebSocket('ws://' + window.location.host + '/')
 
-boardSocket.onclose = e => {
+boardSocket.onclose = event => {
     console.error('Chat socket closed unexpectedly')
 };
 
@@ -87,6 +87,8 @@ usePencil = () => {
 }
 
 draw = () => {
+    // console.log('start draw()', prevX, prevY, currX, currY)
+
     ctx.beginPath()
     ctx.moveTo(prevX, prevY)
     ctx.lineTo(currX, currY)
@@ -94,6 +96,7 @@ draw = () => {
     ctx.lineWidth = strokeWidth
     ctx.stroke()
     ctx.closePath()
+
 }
 
 drawPoint = () => {
@@ -115,13 +118,28 @@ sendCoordenates = () => {
     strokeCoordenates = []
 }
 
+saveImage = (image_name) => {
+    boardSocket.send(JSON.stringify({
+        'action': 'save',
+        'image_name': image_name,
+        'username': username
+    }))
+}
+
+loadImage = (image_name) => {
+    boardSocket.send(JSON.stringify({
+        'action': 'load',
+        'image_name': image_name,
+        'username': username
+    }))
+}
+
 clearBoard = () => {
     ctx.clearRect(0, 0, w, h)
     boardSocket.send(JSON.stringify({
         'action': 'clear',
         'username': username
     }))
-
 }
 
 setCoordenates = (res, e) => {
@@ -158,4 +176,19 @@ setCoordenates = (res, e) => {
         }
     }
 }
+
+boardSocket.onmessage = event => {
+    message = JSON.parse(event.data)
+    strokes = message['strokes']
+    for (stroke of strokes) {
+        prevX = stroke.prev_x
+        prevY = stroke.prev_y
+        currX = stroke.coordenate_x
+        currY = stroke.coordenate_y
+        inkColor = stroke.inkColor
+        // console.log(prevX, prevY, currX, currY)
+        draw()
+    }
+};
+
 document.addEventListener('DOMContentLoaded', init(), false)

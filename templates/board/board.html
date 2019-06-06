@@ -55,7 +55,13 @@
                     <div>
                         <a id="export-draw" class="btn btn-success" href="{% url 'export' username  %}">Export Drawing</a>
                         <button class="btn btn-danger" onclick="clearBoard()">Clear Board</button>
-                    </div>                
+                    </div>
+                    <div>
+                        <button class="btn btn-success" onclick="saveImage('test')">Save Image</button>
+                    </div>     
+                    <div>
+                        <button class="btn btn-success" onclick="loadImage('test')">Load Image</button>
+                    </div>
                 </div>
             </div>
         </div>
